@@ -1,59 +1,59 @@
 package com.example.triplearrangement
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
+import androidx.annotation.RequiresApi
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
+    var mSelectedLine: LinePosition = LinePosition.NONE
+    val mLineAdapters = arrayListOf<LineListAdapter>()
+
     val lines = arrayOf(
-            arrayListOf("11", "22"),
-            arrayListOf(),
-            arrayListOf()
+            arrayListOf(BlockType.RED),
+            arrayListOf(BlockType.BLUE),
+            arrayListOf(BlockType.BLUE)
     )
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val wrappers = arrayOf<RelativeLayout>(
-            findViewById(R.id.wrapper_line_1),
-            findViewById(R.id.wrapper_line_2),
-            findViewById(R.id.wrapper_line_3)
+        val lineWrappers = arrayOf<RelativeLayout>(
+            findViewById(R.id.wrapper_line_left),
+            findViewById(R.id.wrapper_line_middle),
+            findViewById(R.id.wrapper_line_right)
         )
 
-        for (i in wrappers.indices) {
-            val lineListView = wrappers[i].findViewById<ListView>(R.id.line)
-            val adapter = ListViewAdapter(this, lines[i])
-            lineListView.adapter = adapter
-            val lineCover = wrappers[i].findViewById<LinearLayout>(R.id.line_cover)
+        for (i in lineWrappers.indices) {
+            val lineListView = lineWrappers[i].findViewById<ListView>(R.id.line)
+            mLineAdapters.add(LineListAdapter(this, lines[i]))
+            lineListView.adapter = mLineAdapters[i]
+            val lineCover = lineWrappers[i].findViewById<LinearLayout>(R.id.line_cover)
             lineCover.setOnClickListener {
-                lines[i].add("1")
-                adapter.notifyDataSetChanged()
+                if (mSelectedLine.equals(LinePosition.NONE)) {
+                    mLineAdapters[i].selected = true
+                    // TODO: 2020-11-20 mSelectedLine 값 변경
+                    mLineAdapters[i].notifyDataSetChanged()
+                } else {
+                    // TODO: 2020-11-20 move 처리
+                }
             }
         }
+
+        findViewById<LinearLayout>(R.id.time_bar)
+                .setOnClickListener {
+                    lines.forEach {line -> line.add(0, getRandomBlock())}
+                    mLineAdapters.forEach(LineListAdapter::notifyDataSetChanged)
+                }
     }
 
-    private class ListViewAdapter(context: Context, val blocks: ArrayList<String>) : BaseAdapter() {
-        private val mContext: Context = context
-        override fun getCount(): Int {
-            return blocks.size
-        }
-
-        override fun getItem(position: Int): Any {
-            return blocks.get(position)
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup?): View {
-            val layoutInflater = LayoutInflater.from(mContext)
-
-            return layoutInflater.inflate(R.layout.view_block, viewGroup, false)
-        }
-
+    fun getRandomBlock(): BlockType {
+        val values = BlockType.values()
+        return values[Random.nextInt(values.size)]
     }
 }
