@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 
-class LineListAdapter(context: Context, val blocks: ArrayList<BlockType>, var selected:Boolean = false) : BaseAdapter() {
+class LineListAdapter(context: Context, val blocks: ArrayList<BlockType>, private var selected:Boolean = false) : BaseAdapter() {
     private val mContext: Context = context
     override fun getCount(): Int {
         return blocks.size
@@ -43,5 +43,13 @@ class LineListAdapter(context: Context, val blocks: ArrayList<BlockType>, var se
         imageViewWrapper.setBackground(mContext.getDrawable(backgroundResourceId))
 
         return blockView
+    }
+
+    fun select() {
+        this.selected = true
+    }
+
+    fun unselect() {
+        this.selected = false
     }
 }

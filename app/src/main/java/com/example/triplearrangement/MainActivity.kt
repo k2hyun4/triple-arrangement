@@ -36,12 +36,27 @@ class MainActivity : AppCompatActivity() {
             val lineCover = lineWrappers[i].findViewById<LinearLayout>(R.id.line_cover)
             lineCover.setOnClickListener {
                 if (mSelectedLine.equals(LinePosition.NONE)) {
-                    mLineAdapters[i].selected = true
-                    // TODO: 2020-11-20 mSelectedLine 값 변경
-                    mLineAdapters[i].notifyDataSetChanged()
+                    mSelectedLine = findLinePosition(i)
+                    mLineAdapters[i].select()
+                } else if (i == mSelectedLine.index) {
+                    mSelectedLine = LinePosition.NONE
+                    mLineAdapters[i].unselect()
                 } else {
-                    // TODO: 2020-11-20 move 처리
+                    //블럭 데이터 처리
+                    val prevLine = lines[mSelectedLine.index]
+                    val newLine = lines[i]
+                    newLine.add(prevLine.last())
+                    prevLine.removeAt(prevLine.lastIndex)
+
+                    //블럭 뷰 처리
+                    val prevLineAdapter = mLineAdapters[mSelectedLine.index]
+                    prevLineAdapter.unselect()
+                    prevLineAdapter.notifyDataSetChanged()
+
+                    mSelectedLine = LinePosition.NONE
                 }
+
+                mLineAdapters[i].notifyDataSetChanged()
             }
         }
 
@@ -52,8 +67,13 @@ class MainActivity : AppCompatActivity() {
                 }
     }
 
-    fun getRandomBlock(): BlockType {
+    private fun getRandomBlock(): BlockType {
+        // TODO: 2020-11-23 현재 스코어에 따라 제한
         val values = BlockType.values()
         return values[Random.nextInt(values.size)]
+    }
+
+    private fun findLinePosition(index: Int) : LinePosition {
+        return LinePosition.values()[index]
     }
 }
