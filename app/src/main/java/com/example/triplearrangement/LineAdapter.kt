@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 
 class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private var selected:Boolean = false) : BaseAdapter() {
-    private val mContext: Context = context
+    private val context: Context = context
     override fun getCount(): Int {
         return blocks.size
     }
@@ -26,7 +26,7 @@ class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private va
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
-        val layoutInflater = LayoutInflater.from(mContext)
+        val layoutInflater = LayoutInflater.from(context)
         val blockView = layoutInflater.inflate(R.layout.view_block, viewGroup, false)
 
         val imageView = blockView.findViewById<ImageView>(R.id.image_view_block)
@@ -40,7 +40,7 @@ class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private va
         } else {
             R.drawable.block_rounding
         }
-        imageViewWrapper.setBackground(mContext.getDrawable(backgroundResourceId))
+        imageViewWrapper.setBackground(context.getDrawable(backgroundResourceId))
 
         return blockView
     }
