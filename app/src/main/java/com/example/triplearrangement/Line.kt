@@ -7,10 +7,10 @@ class Line(): ArrayList<BlockType>() {
     /**
      * 블럭 이동시 발생
      */
-    fun checkAndRemoveIfAligned(element: BlockType): Boolean {
+    fun checkAndRemoveIfAligned(): Boolean {
         var alignmentFlag = false
 
-        if (this.size > removeSize
+        if (this.size > removeSize - 1
                 && checkRemoveTarget(this.drop(this.size - removeSize))) {
             this.removeRange(this.size - removeSize, this.size)
             alignmentFlag = true
