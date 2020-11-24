@@ -3,19 +3,19 @@ package com.example.triplearrangement
 import kotlin.random.Random
 
 class Line(): ArrayList<BlockType>() {
-    private val REMOVE_SIZE = 3
+    private val removeSize = 3
     /**
      * 블럭 이동시 발생
      */
     override fun add(element: BlockType): Boolean {
         super.add(element)
 
-        if (this.size < REMOVE_SIZE) {
+        if (this.size < removeSize) {
             return true
         }
 
-        if (checkRemoveTarget(this.drop(this.size - REMOVE_SIZE))) {
-            this.removeRange(this.size - REMOVE_SIZE, this.size)
+        if (checkRemoveTarget(this.drop(this.size - removeSize))) {
+            this.removeRange(this.size - removeSize, this.size)
         }
 
         return true
@@ -29,14 +29,14 @@ class Line(): ArrayList<BlockType>() {
     /**
      * 타임바 클릭시 발생, index : 0
      */
-    fun addNewBlock() {
+    fun addNewBlock(level: Int) {
         // TODO: 2020-11-23 현재 스코어에 따라 제한
         val score = 100_000
         val values = BlockType.values()
         var newBlock: BlockType = values[Random.nextInt(values.size)]
         val exceptBlock = this.getExceptBlock()
 
-        while (newBlock.score > score || newBlock == exceptBlock) {
+        while (newBlock.level > level || newBlock == exceptBlock) {
             newBlock = values[Random.nextInt(values.size)]
         }
 
@@ -48,7 +48,7 @@ class Line(): ArrayList<BlockType>() {
      * 없을 경우, null 리턴
      */
     private fun getExceptBlock(): BlockType? {
-        if (this.size < REMOVE_SIZE - 1) {
+        if (this.size < removeSize - 1) {
             return null
         }
 

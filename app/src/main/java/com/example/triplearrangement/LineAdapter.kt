@@ -31,18 +31,23 @@ class LineAdapter(context: Context, private val blocks: ArrayList<BlockType>, pr
         val layoutInflater = LayoutInflater.from(context)
         val blockView = layoutInflater.inflate(R.layout.view_block, viewGroup, false)
 
-        val imageView = blockView.findViewById<ImageView>(R.id.image_view_block)
         val block = this.getItem(position)
-        imageView.setImageResource(block.resourceId())
-        imageView.clipToOutline = true
-
+        val imageView = blockView.findViewById<ImageView>(R.id.image_view_block)
         val imageViewWrapper = blockView.findViewById<LinearLayout>(R.id.wrapper_block_image)
-        val backgroundResourceId = if (selected && position + 1 == count) {
-            R.drawable.block_rounding_highlighted
+        val imageViewImageResourceId: Int
+        val imageViewWrapperBackgroundResourceId: Int
+
+        if (selected && position + 1 == count) {
+            imageViewImageResourceId = block.selectedResourceId
+            imageViewWrapperBackgroundResourceId = R.drawable.block_rounding_highlighted
         } else {
-            R.drawable.block_rounding
+            imageViewImageResourceId = block.resourceId
+            imageViewWrapperBackgroundResourceId = R.drawable.block_rounding
         }
-        imageViewWrapper.background = context.getDrawable(backgroundResourceId)
+
+        imageView.setImageResource(imageViewImageResourceId)
+        imageView.clipToOutline = true
+        imageViewWrapper.background = context.getDrawable(imageViewWrapperBackgroundResourceId)
 
         return blockView
     }

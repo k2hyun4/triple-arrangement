@@ -6,6 +6,8 @@ import android.widget.*
 
 class MainActivity : AppCompatActivity() {
     var selectedLine: LinePosition = LinePosition.NONE
+    var level: Int = 1
+
     private val lineAdapters = arrayListOf<LineAdapter>()
 
     private val lines = arrayOf<Line>(
@@ -22,48 +24,52 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.wrapper_line_right)
         )
 
-        for (i in lineWrappers.indices) {
-            val lineListView = lineWrappers[i].findViewById<ListView>(R.id.line)
-            lineAdapters.add(LineAdapter(this, lines[i]))
-            lineListView.adapter = lineAdapters[i]
-            val lineCover = lineWrappers[i].findViewById<LinearLayout>(R.id.line_cover)
+        for (targetLineIndex in lineWrappers.indices) {
+            val lineListView = lineWrappers[targetLineIndex].findViewById<ListView>(R.id.line)
+            lineAdapters.add(LineAdapter(this, lines[targetLineIndex]))
+            lineListView.adapter = lineAdapters[targetLineIndex]
+            val lineCover = lineWrappers[targetLineIndex].findViewById<LinearLayout>(R.id.line_cover)
             lineCover.setOnClickListener {
                 if (selectedLine == LinePosition.NONE) {
-                    if (lines[i].size > 0) {
-                        selectedLine = findLinePosition(i)
-                        lineAdapters[i].select()
+                    if (lines[targetLineIndex].size > 0) {
+                        selectedLine = findLinePosition(targetLineIndex)
+                        lineAdapters[targetLineIndex].select()
                     }
-                } else if (i == selectedLine.index) {
+                } else if (targetLineIndex == selectedLine.index) {
                     selectedLine = LinePosition.NONE
-                    lineAdapters[i].deselect()
+                    lineAdapters[targetLineIndex].deselect()
                 } else {
-                    //블럭 데이터 처리
-                    val prevLine = lines[selectedLine.index]
-                    val newLine = lines[i]
-                    newLine.add(prevLine.last())
-
-                    prevLine.removeAt(prevLine.lastIndex)
-
-                    //블럭 뷰 처리
-                    val prevLineAdapter = lineAdapters[selectedLine.index]
-                    prevLineAdapter.deselect()
-                    prevLineAdapter.notifyDataSetChanged()
-
+                    moveBlock(targetLineIndex)
+                    deselectLine(selectedLine.index)
                     selectedLine = LinePosition.NONE
                 }
 
-                lineAdapters[i].notifyDataSetChanged()
+                lineAdapters[targetLineIndex].notifyDataSetChanged()
             }
         }
 
         findViewById<LinearLayout>(R.id.time_bar)
                 .setOnClickListener {
-                    lines.forEach(Line::addNewBlock)
+                    lines.forEach{line -> line.addNewBlock(level)}
                     lineAdapters.forEach(LineAdapter::notifyDataSetChanged)
                 }
     }
 
-    private fun findLinePosition(index: Int) : LinePosition {
-        return LinePosition.values()[index]
+    private fun deselectLine(prevSelectedLineIndex: Int) {
+        val prevLineAdapter = lineAdapters[prevSelectedLineIndex]
+        prevLineAdapter.deselect()
+        prevLineAdapter.notifyDataSetChanged()
+    }
+
+    private fun moveBlock(targetLineIndex: Int) {
+        val prevLine = lines[selectedLine.index]
+        val newLine = lines[targetLineIndex]
+        newLine.add(prevLine.last())
+
+        prevLine.removeAt(prevLine.lastIndex)
+    }
+
+    private fun findLinePosition(targetLineIndex: Int) : LinePosition {
+        return LinePosition.values()[targetLineIndex]
     }
 }
