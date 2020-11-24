@@ -3,7 +3,7 @@ package com.example.triplearrangement
 import kotlin.random.Random
 
 class Line(): ArrayList<BlockType>() {
-    val REMOVE_SIZE = 3
+    private val REMOVE_SIZE = 3
     /**
      * 블럭 이동시 발생
      */
@@ -22,8 +22,8 @@ class Line(): ArrayList<BlockType>() {
     }
 
     private fun checkRemoveTarget(targetBlocks: List<BlockType>): Boolean {
-        return targetBlocks[0].equals(targetBlocks[1])
-                && targetBlocks[1].equals(targetBlocks[2]);
+        return targetBlocks[0] == targetBlocks[1]
+                && targetBlocks[1] == targetBlocks[2];
     }
 
     /**
@@ -36,7 +36,7 @@ class Line(): ArrayList<BlockType>() {
         var newBlock: BlockType = values[Random.nextInt(values.size)]
         val exceptBlock = this.getExceptBlock()
 
-        while (newBlock.score > score || newBlock.equals(exceptBlock)) {
+        while (newBlock.score > score || newBlock == exceptBlock) {
             newBlock = values[Random.nextInt(values.size)]
         }
 
@@ -52,12 +52,12 @@ class Line(): ArrayList<BlockType>() {
             return null
         }
 
-        val firstBlockType = this.get(0)
+        val firstBlockType = this[0]
 
-        if (firstBlockType.equals(this.get(1))) {
-            return firstBlockType
+        return if (firstBlockType == this[1]) {
+            firstBlockType
         } else {
-            return null
+            null
         }
     }
 }

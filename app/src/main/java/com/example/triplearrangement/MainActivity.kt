@@ -6,9 +6,9 @@ import android.widget.*
 
 class MainActivity : AppCompatActivity() {
     var selectedLine: LinePosition = LinePosition.NONE
-    val lineAdapters = arrayListOf<LineAdapter>()
+    private val lineAdapters = arrayListOf<LineAdapter>()
 
-    val lines = arrayOf<Line>(
+    private val lines = arrayOf<Line>(
             Line(), Line(), Line()
     )
     
@@ -28,14 +28,14 @@ class MainActivity : AppCompatActivity() {
             lineListView.adapter = lineAdapters[i]
             val lineCover = lineWrappers[i].findViewById<LinearLayout>(R.id.line_cover)
             lineCover.setOnClickListener {
-                if (selectedLine.equals(LinePosition.NONE)) {
+                if (selectedLine == LinePosition.NONE) {
                     if (lines[i].size > 0) {
                         selectedLine = findLinePosition(i)
                         lineAdapters[i].select()
                     }
                 } else if (i == selectedLine.index) {
                     selectedLine = LinePosition.NONE
-                    lineAdapters[i].unselect()
+                    lineAdapters[i].deselect()
                 } else {
                     //블럭 데이터 처리
                     val prevLine = lines[selectedLine.index]
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
                     //블럭 뷰 처리
                     val prevLineAdapter = lineAdapters[selectedLine.index]
-                    prevLineAdapter.unselect()
+                    prevLineAdapter.deselect()
                     prevLineAdapter.notifyDataSetChanged()
 
                     selectedLine = LinePosition.NONE

@@ -1,5 +1,6 @@
 package com.example.triplearrangement
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
@@ -10,7 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 
-class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private var selected:Boolean = false) : BaseAdapter() {
+class LineAdapter(context: Context, private val blocks: ArrayList<BlockType>, private var selected:Boolean = false) : BaseAdapter() {
     private val context: Context = context
     override fun getCount(): Int {
         return blocks.size
@@ -24,6 +25,7 @@ class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private va
         return position.toLong()
     }
 
+    @SuppressLint("ViewHolder")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
         val layoutInflater = LayoutInflater.from(context)
@@ -40,7 +42,7 @@ class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private va
         } else {
             R.drawable.block_rounding
         }
-        imageViewWrapper.setBackground(context.getDrawable(backgroundResourceId))
+        imageViewWrapper.background = context.getDrawable(backgroundResourceId)
 
         return blockView
     }
@@ -49,7 +51,7 @@ class LineAdapter(context: Context, val blocks: ArrayList<BlockType>, private va
         this.selected = true
     }
 
-    fun unselect() {
+    fun deselect() {
         this.selected = false
     }
 }
