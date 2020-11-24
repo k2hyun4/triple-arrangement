@@ -6,17 +6,18 @@ import android.widget.*
 
 class MainActivity : AppCompatActivity() {
     var selectedLine: LinePosition = LinePosition.NONE
-    var level: Int = 1
-
+    lateinit var score: Score
     private val lineAdapters = arrayListOf<LineAdapter>()
 
-    private val lines = arrayOf<Line>(
-            Line(), Line(), Line()
+    private val lines = arrayOf(
+        Line(), Line(), Line()
     )
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        score = Score(findViewById(R.id.score))
 
         val lineWrappers = arrayOf<RelativeLayout>(
             findViewById(R.id.wrapper_line_left),
@@ -50,8 +51,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.time_bar)
                 .setOnClickListener {
+                    val level = score.getLevel()
                     lines.forEach{line -> line.addNewBlock(level)}
                     lineAdapters.forEach(LineAdapter::notifyDataSetChanged)
+                    score.plusForTimeBarClick()
                 }
     }
 
@@ -64,9 +67,14 @@ class MainActivity : AppCompatActivity() {
     private fun moveBlock(targetLineIndex: Int) {
         val prevLine = lines[selectedLine.index]
         val newLine = lines[targetLineIndex]
-        newLine.add(prevLine.last())
+        val prevLineLastBlockType = prevLine.last()
+        newLine.add(prevLineLastBlockType)
+        if (newLine.checkAndRemoveIfAligned(prevLineLastBlockType)) {
+            score.plusForAlignment()
+        }
 
         prevLine.removeAt(prevLine.lastIndex)
+        score.plusForMoveBlock()
     }
 
     private fun findLinePosition(targetLineIndex: Int) : LinePosition {

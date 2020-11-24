@@ -7,18 +7,16 @@ class Line(): ArrayList<BlockType>() {
     /**
      * 블럭 이동시 발생
      */
-    override fun add(element: BlockType): Boolean {
-        super.add(element)
+    fun checkAndRemoveIfAligned(element: BlockType): Boolean {
+        var alignmentFlag = false
 
-        if (this.size < removeSize) {
-            return true
-        }
-
-        if (checkRemoveTarget(this.drop(this.size - removeSize))) {
+        if (this.size > removeSize
+                && checkRemoveTarget(this.drop(this.size - removeSize))) {
             this.removeRange(this.size - removeSize, this.size)
+            alignmentFlag = true
         }
 
-        return true
+        return alignmentFlag
     }
 
     private fun checkRemoveTarget(targetBlocks: List<BlockType>): Boolean {
@@ -30,8 +28,6 @@ class Line(): ArrayList<BlockType>() {
      * 타임바 클릭시 발생, index : 0
      */
     fun addNewBlock(level: Int) {
-        // TODO: 2020-11-23 현재 스코어에 따라 제한
-        val score = 100_000
         val values = BlockType.values()
         var newBlock: BlockType = values[Random.nextInt(values.size)]
         val exceptBlock = this.getExceptBlock()
