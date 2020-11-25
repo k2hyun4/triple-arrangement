@@ -1,7 +1,22 @@
 <resources>
     <string name="app_name">TripleArrangement</string>
+    <string name="record_preference_key">recordPreferenceKey</string>
     <string name="btn_pause">||</string>
     <string name="score">Score</string>
     <string name="zero_value">0</string>
     <string name="combo">Combo</string>
+
+    <!-- game over dialog -->
+    <string name="max_score">최고 점수</string>
+    <string name="now_score">현재 점수</string>
+    <string name="max_combo">최고 콤보</string>
+    <string name="now_combo">현재 콤보</string>
+    <string name="new_record_sign">New!</string>
+
+    <string name="go_to_main">메인으로</string>
+    <string name="restart">다시 시작</string>
+
+    <string name="max_score_key">maxScoreKey</string>
+    <string name="max_combo_key">maxComboKey</string>
+
 </resources>

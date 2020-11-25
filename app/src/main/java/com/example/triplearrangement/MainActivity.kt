@@ -3,18 +3,25 @@ package com.example.triplearrangement
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
+import java.util.*
+import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
-    var selectedLine: LinePosition = LinePosition.NONE
-    lateinit var score: Score
-    lateinit var combo: Combo
-    lateinit var lineWrappers: Array<RelativeLayout>
+    private var selectedLine: LinePosition = LinePosition.NONE
+    private val addNewBlockPeriodMillis: Long = 2_500
+    private val limitBlockCount = 12
     private val lineAdapters = arrayListOf<LineAdapter>()
+
+    private lateinit var score: Score
+    private lateinit var combo: Combo
+    private lateinit var lineWrappers: Array<RelativeLayout>
+    private lateinit var addNewBlockTimer: Timer
+    private lateinit var gameOverDialog: GameOverDialog
 
     private val lines = arrayOf(
         Line(), Line(), Line()
     )
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +41,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         setOnClickTimeBar()
+        startAddNewBlockTimer()
+        initGameOverDialog()
+    }
+
+    private fun startAddNewBlockTimer() {
+        addNewBlockTimer = timer(period = addNewBlockPeriodMillis) {
+            runOnUiThread {
+                if (!checkLinesAddableBlock()) {
+                    gameOver()
+                }
+
+                addNewLine()
+            }
+        }
     }
 
     private fun setLineAdapter(targetLineIndex: Int) {
@@ -46,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         lineWrappers[targetLineIndex].findViewById<LinearLayout>(R.id.line_cover)
             .setOnClickListener {
                 val lineAdapter = lineAdapters[targetLineIndex]
+
                 if (selectedLine == LinePosition.NONE) {
                     if (lines[targetLineIndex].size > 0) {
                         selectedLine = findLinePosition(targetLineIndex)
@@ -65,11 +87,18 @@ class MainActivity : AppCompatActivity() {
     private fun setOnClickTimeBar() {
         findViewById<LinearLayout>(R.id.time_bar)
                 .setOnClickListener {
-                    val level = score.getLevel()
-                    lines.forEach{line -> line.addNewBlock(level)}
-                    lineAdapters.forEach(LineAdapter::notifyDataSetChanged)
-                    score.plusForTimeBarClick()
+                    if (checkLinesAddableBlock()) {
+                        addNewLine()
+                        score.plusForTimeBarClick()
+                        combo.resetMoveCount()
+                    }
                 }
+    }
+
+    private fun addNewLine() {
+        val level = score.getLevel()
+        lines.forEach {line -> line.addNewBlock(level)}
+        lineAdapters.forEach(LineAdapter::notifyDataSetChanged)
     }
 
     private fun deselectLine(prevSelectedLineIndex: Int) {
@@ -79,8 +108,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveBlock(targetLineIndex: Int) {
-        val prevLine = lines[selectedLine.index]
         val newLine = lines[targetLineIndex]
+
+        if (!checkLineAddableBlock(newLine)) {
+            return
+        }
+
+        val prevLine = lines[selectedLine.index]
         val prevLineLastBlockType = prevLine.last()
         newLine.add(prevLineLastBlockType)
 
@@ -99,7 +133,46 @@ class MainActivity : AppCompatActivity() {
         selectedLine = LinePosition.NONE
     }
 
+    private fun checkLinesAddableBlock(): Boolean {
+        var addableFlag = true
+
+        for (line in lines) {
+            if (!checkLineAddableBlock(line)) {
+                addableFlag = false
+                break;
+            }
+        }
+
+        return addableFlag
+    }
+
+    private fun checkLineAddableBlock(line: Line): Boolean {
+        return line.size < limitBlockCount
+    }
+
     private fun findLinePosition(targetLineIndex: Int) : LinePosition {
         return LinePosition.values()[targetLineIndex]
+    }
+
+    private fun initGameOverDialog() {
+        gameOverDialog = GameOverDialog(this)
+        this.supportFragmentManager.executePendingTransactions()
+        gameOverDialog.getDialog().setOnDismissListener {
+            resetAll()
+        }
+    }
+
+    private fun gameOver() {
+        addNewBlockTimer.cancel()
+        gameOverDialog.run(score.getScore(), combo.getCombo())
+    }
+
+    fun resetAll() {
+        score.resetAll()
+        combo.resetAll()
+        lines.forEach(Line::clear)
+        lineAdapters.forEach(LineAdapter::notifyDataSetChanged)
+
+        startAddNewBlockTimer()
     }
 }

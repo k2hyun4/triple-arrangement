@@ -3,13 +3,16 @@ package com.example.triplearrangement
 import android.widget.TextView
 
 class Score(private val view: TextView) {
-    private var level: Int = 1
+    private val initLevel = 1
+    private val initLevelUpStandardScore = 1_000
+    private var level: Int = initLevel
+    private var levelUpStandardScore = initLevelUpStandardScore
+
     private val timeBarClickBonus = 10
     private val moveBlockBonus = 5
     private val alignmentBonus = 50
-    private var levelUpStandardScore = 1_000
 
-    private fun getScore(): Int {
+    fun getScore(): Int {
         return this.view.text
                 .toString()
                 .replace(",", "")
@@ -46,5 +49,11 @@ class Score(private val view: TextView) {
 
     fun getLevel(): Int {
         return this.level
+    }
+
+    fun resetAll() {
+        this.level = initLevel
+        this.levelUpStandardScore = initLevelUpStandardScore
+        setScore(0)
     }
 }

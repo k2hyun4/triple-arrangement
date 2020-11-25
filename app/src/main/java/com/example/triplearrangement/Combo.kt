@@ -7,7 +7,7 @@ class Combo(private val view: TextView) {
     private var moveCount = 0
     private val allowedSurMove = 0
 
-    private fun getCombo(): Int {
+    fun getCombo(): Int {
         return this.view.text
                 .toString()
                 .toInt()
@@ -42,7 +42,12 @@ class Combo(private val view: TextView) {
         this.moveCount += 1
     }
 
-    private fun resetMoveCount() {
+    fun resetMoveCount() {
         this.moveCount = 0
+    }
+
+    fun resetAll() {
+        this.maxCombo = 0
+        setCombo(0)
     }
 }
