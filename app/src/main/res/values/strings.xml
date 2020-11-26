@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">TripleArrangement</string>
+
+    <!-- main activity -->
+    <string name="game_start">게임 시작</string>
+
     <string name="record_preference_key">recordPreferenceKey</string>
     <string name="btn_pause">||</string>
     <string name="score">Score</string>
@@ -13,6 +17,7 @@
     <string name="now_combo">현재 콤보</string>
     <string name="new_record_sign">New!</string>
 
+    <string name="resume">게임 재개</string>
     <string name="go_to_main">메인으로</string>
     <string name="restart">다시 시작</string>
 

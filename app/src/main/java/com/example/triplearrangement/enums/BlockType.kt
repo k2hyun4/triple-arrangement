@@ -1,4 +1,6 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.enums
+
+import com.example.triplearrangement.R
 
 enum class BlockType(val resourceId: Int, val selectedResourceId:Int, val level: Int) {
     RED(R.drawable.block_red, R.drawable.block_red_selected, 1),

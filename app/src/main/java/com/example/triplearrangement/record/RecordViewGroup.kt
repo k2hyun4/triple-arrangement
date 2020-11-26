@@ -1,8 +1,9 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.record
 
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.triplearrangement.R
 
 class RecordViewGroup {
     lateinit var recordView: TextView

@@ -1,4 +1,4 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.record
 
 import android.widget.TextView
 

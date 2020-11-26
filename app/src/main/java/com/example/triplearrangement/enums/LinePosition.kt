@@ -1,4 +1,4 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.enums
 
 enum class LinePosition(val index: Int) {
     LEFT(0),

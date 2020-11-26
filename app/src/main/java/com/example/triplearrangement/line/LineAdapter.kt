@@ -1,4 +1,4 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.line
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,8 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
+import com.example.triplearrangement.R
+import com.example.triplearrangement.enums.BlockType
 
 class LineAdapter(context: Context, private val blocks: ArrayList<BlockType>, private var selected:Boolean = false) : BaseAdapter() {
     private val context: Context = context

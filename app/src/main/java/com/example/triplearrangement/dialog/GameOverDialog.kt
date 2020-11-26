@@ -1,13 +1,11 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.view.Window
-import android.widget.Button
+import com.example.triplearrangement.R
+import com.example.triplearrangement.record.RecordViewGroup
 
-class GameOverDialog(private val context: Context) {
-    private val dialog: Dialog = Dialog(context)
+class GameOverDialog(private val context: Context): CustomDialog(context = context, layoutResourceId = R.layout.dialog_game_over) {
     private lateinit var recordViewGroups: Map<String, RecordViewGroup>
     private lateinit var sharedPref: SharedPreferences
     private lateinit var maxScoreKey: String
@@ -16,24 +14,14 @@ class GameOverDialog(private val context: Context) {
     private val nowComboKey: String = "nowComboKey"
 
     init {
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.dialog_game_over)
-        dialog.setCancelable(false)
-        initAboutPref()
+        initPref()
         initView()
     }
 
-    fun getDialog(): Dialog {
-        return dialog
-    }
-
-    fun run(score: Int, combo: Int) {
-        setRecordView(score, nowScoreKey)
-        setRecordView(combo, nowComboKey)
-        setRecord(score, maxScoreKey)
-        setRecord(combo, maxComboKey)
-
-        dialog.show()
+    private fun initPref() {
+        sharedPref = context.getSharedPreferences(context.getString(R.string.record_preference_key), Context.MODE_PRIVATE)
+        maxScoreKey = context.getString(R.string.max_score_key)
+        maxComboKey = context.getString(R.string.max_combo_key)
     }
 
     private fun initView() {
@@ -43,22 +31,15 @@ class GameOverDialog(private val context: Context) {
                 Pair(maxComboKey, RecordViewGroup(dialog.findViewById(R.id.max_combo))),
                 Pair(nowComboKey, RecordViewGroup(dialog.findViewById(R.id.now_combo)))
         )
-
-        dialog.findViewById<Button>(R.id.restart)
-                .setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.findViewById<Button>(R.id.goToMain)
-                .setOnClickListener {
-            // TODO: 2020-11-25 메뉴 액티비티 생성 후 처리
-        }
     }
 
-    private fun initAboutPref() {
-        sharedPref = context.getSharedPreferences(context.getString(R.string.record_preference_key), Context.MODE_PRIVATE)
-        maxScoreKey = context.getString(R.string.max_score_key)
-        maxComboKey = context.getString(R.string.max_combo_key)
+    fun show(score: Int, combo: Int) {
+        setRecordView(score, nowScoreKey)
+        setRecordView(combo, nowComboKey)
+        setRecord(score, maxScoreKey)
+        setRecord(combo, maxComboKey)
+
+        dialog.show()
     }
 
     private fun setRecordView(record: Int, recordKey: String) {

@@ -1,5 +1,6 @@
-package com.example.triplearrangement
+package com.example.triplearrangement.line
 
+import com.example.triplearrangement.enums.BlockType
 import kotlin.random.Random
 
 class Line(): ArrayList<BlockType>() {
