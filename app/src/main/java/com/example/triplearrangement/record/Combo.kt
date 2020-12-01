@@ -7,10 +7,14 @@ class Combo(private val view: TextView) {
     private var moveCount = 0
     private val allowedSurMove = 0
 
-    fun getCombo(): Int {
+    private fun getCombo(): Int {
         return this.view.text
                 .toString()
                 .toInt()
+    }
+
+    fun getMaxCombo(): Int {
+        return this.maxCombo
     }
 
     fun checkMaintain(level: Int) {

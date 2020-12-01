@@ -69,7 +69,7 @@ class PlayActivity : AppCompatActivity() {
 
     private fun gameOver() {
         addNewRowTimer.stop()
-        gameOverDialog.show(score.getScore(), combo.getCombo())
+        gameOverDialog.show(score.getScore(), combo.getMaxCombo())
     }
 
     fun resetAll() {
