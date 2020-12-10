@@ -14,6 +14,7 @@ class Combo(private val view: TextView) {
     }
 
     fun getMaxCombo(): Int {
+        checkMaxCombo()
         return this.maxCombo
     }
 
