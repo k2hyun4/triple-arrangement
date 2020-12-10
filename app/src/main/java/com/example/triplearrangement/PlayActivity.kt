@@ -78,4 +78,8 @@ class PlayActivity : AppCompatActivity() {
         lineController.resetAll()
         addNewRowTimer.start()
     }
+
+    override fun onBackPressed() {
+        menuDialog.show()
+    }
 }
