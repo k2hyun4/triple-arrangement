@@ -38,7 +38,9 @@ class GameOverDialog(private val context: Context): CustomDialog(context = conte
         setRecordView(combo, nowComboKey)
         setRecord(score, maxScoreKey)
         setRecord(combo, maxComboKey)
-
+        dialog.window
+                ?.attributes
+                ?.y = -200
         dialog.show()
     }
 
