@@ -1,14 +1,18 @@
 package com.example.triplearrangement.line
 
 import android.content.Context
+import android.os.Build
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import com.example.triplearrangement.PlayActivity
 import com.example.triplearrangement.R
 import com.example.triplearrangement.enums.LinePosition
+import kotlin.math.log
 
-class LineController(context: Context, private val lineWrappers: Array<RelativeLayout>) {
+class LineController(context: Context,
+                     private val lineWrappers: Array<RelativeLayout>) {
     private val lineAdapters = arrayListOf<LineAdapter>()
     private var selectedLine: LinePosition = LinePosition.NONE
     private val playActivity: PlayActivity = context as PlayActivity
@@ -21,8 +25,14 @@ class LineController(context: Context, private val lineWrappers: Array<RelativeL
     )
 
     init {
+        val wrapperHeight = playActivity.findViewById<LinearLayout>(R.id.wrapper_lines)
+                .height
+        val blockHeight = wrapperHeight / (limitBlockCount - 1)
+
         for (targetLineIndex in lineWrappers.indices) {
-            lineAdapters.add(LineAdapter(context, lines[targetLineIndex]))
+            val lineView = lineWrappers[targetLineIndex].findViewById<ListView>(R.id.line)
+            lineView.dividerHeight = - blockHeight / 8
+            lineAdapters.add(LineAdapter(context, lines[targetLineIndex], blockHeight))
             setLineAdapter(targetLineIndex)
             setOnClickLineCover(targetLineIndex)
         }

@@ -1,6 +1,7 @@
 package com.example.triplearrangement
 
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.*
 import com.example.triplearrangement.dialog.GameOverDialog
@@ -24,16 +25,26 @@ class PlayActivity : AppCompatActivity() {
 
         score = Score(findViewById(R.id.score))
         combo = Combo(findViewById(R.id.combo))
-        lineController = LineController(this, arrayOf(
-                findViewById(R.id.wrapper_line_left),
-                findViewById(R.id.wrapper_line_middle),
-                findViewById(R.id.wrapper_line_right)
-            )
-        )
-
         initDialogs()
-        setOnClickTimeBar()
         initAddNewRowTimer()
+        val rootLayout = findViewById<LinearLayout>(R.id.root)
+        val context = this
+        rootLayout.viewTreeObserver.addOnGlobalLayoutListener(
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    lineController = LineController(context,
+                        arrayOf(
+                            findViewById(R.id.wrapper_line_left),
+                            findViewById(R.id.wrapper_line_middle),
+                            findViewById(R.id.wrapper_line_right)
+                        )
+                    )
+
+                    setOnClickTimeBar()
+                    rootLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            }
+        )
     }
 
     private fun initDialogs() {
