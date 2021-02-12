@@ -27,6 +27,7 @@ open class CustomDialog(private val context: Context, private val layoutResource
         dialog.findViewById<Button>(R.id.goToMain)
                 .setOnClickListener {
                     val intent = Intent(context, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     context.startActivity(intent)
                 }
     }

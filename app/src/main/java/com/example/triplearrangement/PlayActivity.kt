@@ -25,13 +25,13 @@ class PlayActivity : AppCompatActivity() {
 
         score = Score(findViewById(R.id.score))
         combo = Combo(findViewById(R.id.combo))
-        initDialogs()
-        initAddNewRowTimer()
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this
         rootLayout.viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
+                    initAddNewRowTimer()
+                    initDialogs()
                     lineController = LineController(context,
                         arrayOf(
                             findViewById(R.id.wrapper_line_left),

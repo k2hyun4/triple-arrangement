@@ -14,6 +14,11 @@ class MenuDialog(private val context: Context): CustomDialog(context = context, 
     }
 
     override fun show() {
+        if (!playActivity.addNewRowTimer
+                        .ready()) {
+            return
+        }
+
         super.show()
         playActivity.addNewRowTimer.stop()
     }
