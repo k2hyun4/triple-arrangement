@@ -35,7 +35,6 @@ class LineAdapter(context: Context,
     }
 
     @SuppressLint("ViewHolder")
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
         val layoutInflater = LayoutInflater.from(context)
         val blockView = layoutInflater.inflate(R.layout.view_block, viewGroup, false)

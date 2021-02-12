@@ -1,11 +1,32 @@
 package com.example.triplearrangement.record
 
+import android.content.Context
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.triplearrangement.PlayActivity
+import com.example.triplearrangement.R
 
-class Combo(private val view: TextView) {
+class Combo(context: Context,
+            private val view: TextView) {
+    private val playActivity: PlayActivity = context as PlayActivity
     private var maxCombo: Int = 0
     private var moveCount = 0
     private val allowedSurMove = 0
+    private val comboModeStandardCount = 10
+    private var comboModeFlag = false
+    private val linesWrapper: LinearLayout
+    private val comboModeImgLeft: ImageView
+    private val comboModeImgRight: ImageView
+    private val timeBar: LinearLayout
+
+    init {
+        linesWrapper = playActivity.findViewById(R.id.wrapper_lines)
+        comboModeImgLeft = playActivity.findViewById(R.id.img_combo_mode_left)
+        comboModeImgRight = playActivity.findViewById(R.id.img_combo_mode_right)
+        timeBar = playActivity.findViewById(R.id.time_bar)
+    }
 
     private fun getCombo(): Int {
         return this.view.text
@@ -22,11 +43,42 @@ class Combo(private val view: TextView) {
         if (this.moveCount > level + allowedSurMove) {
             checkMaxCombo()
             setCombo(0)
+            stopComboMode()
         }
+    }
+
+    private fun startComboMode() {
+        if (comboModeFlag
+            || this.getCombo() < comboModeStandardCount) {
+            return
+        }
+
+        comboModeFlag = true
+        comboModeEffect()
+    }
+
+    private fun stopComboMode() {
+        comboModeFlag = false
+        defaultEffect()
+    }
+
+    private fun defaultEffect() {
+        linesWrapper.background = playActivity.getDrawable(R.color.black)
+        comboModeImgLeft.visibility = View.INVISIBLE
+        comboModeImgRight.visibility = View.INVISIBLE
+        timeBar.background = playActivity.getDrawable(R.color.purple_700)
+    }
+
+    private fun comboModeEffect() {
+        linesWrapper.background = playActivity.getDrawable(R.drawable.background_combo_mode)
+        comboModeImgLeft.visibility = View.VISIBLE
+        comboModeImgRight.visibility = View.VISIBLE
+        timeBar.background = playActivity.getDrawable(R.color.red)
     }
 
     fun addCombo() {
         setCombo(getCombo() + 1)
+        startComboMode()
     }
 
     private fun setCombo(combo: Int) {
@@ -54,5 +106,14 @@ class Combo(private val view: TextView) {
     fun resetAll() {
         this.maxCombo = 0
         setCombo(0)
+        stopComboMode()
+    }
+
+    fun comboBonus(): Int {
+        if (!comboModeFlag) {
+             return 1
+        }
+
+        return getCombo() / 10 + 1
     }
 }

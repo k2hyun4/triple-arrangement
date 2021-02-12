@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.triplearrangement"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 10001
         versionName "1.0.1"
