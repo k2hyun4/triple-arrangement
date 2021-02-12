@@ -23,8 +23,9 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
-        score = Score(findViewById(R.id.score))
-        combo = Combo(findViewById(R.id.combo))
+        combo = Combo(this, findViewById(R.id.combo))
+        score = Score(findViewById(R.id.score), combo)
+
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this
         rootLayout.viewTreeObserver.addOnGlobalLayoutListener(

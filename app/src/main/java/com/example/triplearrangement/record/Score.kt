@@ -1,10 +1,12 @@
 package com.example.triplearrangement.record
 
+import android.util.Log
 import android.widget.TextView
+import kotlin.math.*
 
-class Score(private val view: TextView) {
+class Score(private val view: TextView, private val combo: Combo) {
     private val initLevel = 1
-    private val initLevelUpStandardScore = 1_000
+    private val initLevelUpStandardScore = 500
     private var level: Int = initLevel
     private var levelUpStandardScore = initLevelUpStandardScore
 
@@ -20,7 +22,8 @@ class Score(private val view: TextView) {
     }
 
     private fun addScore(addScore: Int) {
-        setScore(this.getScore() + addScore)
+        var buffedAddScore = addScore * level * combo.comboBonus()
+        setScore(this.getScore() + buffedAddScore)
     }
 
     private fun setScore(score: Int) {
@@ -31,7 +34,8 @@ class Score(private val view: TextView) {
     private fun checkLevelUp(score: Int) {
         if (score > levelUpStandardScore) {
             level += 1
-            levelUpStandardScore *= 2
+            //levelUpStandardScore *= log(level * 2.0, 4.0).roundToInt()
+            levelUpStandardScore = 1_000 * (level * 1.0).pow(2.4).roundToInt() - 1_000
         }
     }
 
@@ -40,11 +44,11 @@ class Score(private val view: TextView) {
     }
 
     fun plusForMoveBlock() {
-        this.addScore(moveBlockBonus * level)
+        this.addScore(moveBlockBonus)
     }
 
     fun plusForAlignment() {
-        this.addScore(alignmentBonus * level)
+        this.addScore(alignmentBonus)
     }
 
     fun getLevel(): Int {
