@@ -3,6 +3,7 @@ package com.murkgom.triple_arrangement.record
 import android.widget.TextView
 import android.widget.Toast
 import com.murkgom.triple_arrangement.PlayActivity
+import com.murkgom.triple_arrangement.enums.BlockType
 import kotlin.math.*
 
 class Score(private val view: TextView,
@@ -42,18 +43,32 @@ class Score(private val view: TextView,
         checkLevelUp(score)
     }
 
+    private fun levelUpable(): Boolean {
+        return level < BlockType.values()
+            .last()
+            .level
+    }
+
     private fun checkLevelUp(score: Int) {
+        if (!levelUpable()) {
+            return
+        }
+
         if (score > levelUpStandardScore) {
             level += 1
             levelUpStandardScore = getLevelStandardScore(level)
             Toast.makeText(playActivity,
-                    String.format("Level[%d]!", level),
+                    String.format("레벨%d!", level),
                     Toast.LENGTH_LONG)
                 .show()
         }
     }
 
     private fun getLevelStandardScore(level: Int): Int {
+        if (level == 1) {
+            return 500
+        }
+
         return (102.361 * (1.0* level).pow(3.766)).roundToInt() + 3004
     }
 
@@ -81,9 +96,8 @@ class Score(private val view: TextView,
 
     fun setting(startLevel: Int) {
         initLevel = startLevel
-        initScore = getLevelStandardScore(startLevel)
-        initLevelUpStandardScore = initScore
-
+        initLevelUpStandardScore = getLevelStandardScore(startLevel)
+        initScore = if (startLevel == 1) {0} else {getLevelStandardScore(startLevel - 1)}
         resetAll()
     }
 }
