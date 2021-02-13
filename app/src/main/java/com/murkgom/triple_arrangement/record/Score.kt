@@ -56,6 +56,8 @@ class Score(private val view: TextView,
 
         if (score > levelUpStandardScore) {
             level += 1
+            playActivity.combo
+                    .addMoveCountInCombo()
             levelUpStandardScore = getLevelStandardScore(level)
             Toast.makeText(playActivity,
                     String.format("레벨%d!", level),
