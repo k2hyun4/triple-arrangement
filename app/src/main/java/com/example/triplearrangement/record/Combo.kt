@@ -28,7 +28,7 @@ class Combo(context: Context,
         timeBar = playActivity.findViewById(R.id.time_bar)
     }
 
-    private fun getCombo(): Int {
+    fun getCombo(): Int {
         return this.view.text
                 .toString()
                 .toInt()
@@ -45,6 +45,10 @@ class Combo(context: Context,
             setCombo(0)
             stopComboMode()
         }
+    }
+
+    fun inComboMode(): Boolean {
+        return this.comboModeFlag
     }
 
     private fun startComboMode() {
@@ -107,13 +111,5 @@ class Combo(context: Context,
         this.maxCombo = 0
         setCombo(0)
         stopComboMode()
-    }
-
-    fun comboBonus(): Int {
-        if (!comboModeFlag) {
-             return 1
-        }
-
-        return getCombo() / 10 + 1
     }
 }
