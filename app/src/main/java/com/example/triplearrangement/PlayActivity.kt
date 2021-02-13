@@ -7,6 +7,7 @@ import android.widget.*
 import com.example.triplearrangement.dialog.GameOverDialog
 import com.example.triplearrangement.dialog.MenuDialog
 import com.example.triplearrangement.line.LineController
+import com.example.triplearrangement.option.StartOption
 import com.example.triplearrangement.record.Combo
 import com.example.triplearrangement.record.Score
 import com.example.triplearrangement.timer.AddNewRowTimer
@@ -25,6 +26,11 @@ class PlayActivity : AppCompatActivity() {
 
         combo = Combo(this, findViewById(R.id.combo))
         score = Score(findViewById(R.id.score), this)
+        val startOption = intent.getParcelableExtra<StartOption>(this.getString(R.string.extra_start_option_key))
+
+        if (startOption != null) {
+            score.setting(startOption.getLevel())
+        }
 
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this
@@ -81,7 +87,9 @@ class PlayActivity : AppCompatActivity() {
 
     private fun gameOver() {
         addNewRowTimer.stop()
-        gameOverDialog.show(score.getScore(), combo.getMaxCombo())
+        gameOverDialog.show(score.getScore(),
+                combo.getMaxCombo(),
+                score.getLevel())
     }
 
     fun resetAll() {
