@@ -3,6 +3,7 @@
 
     <!-- main activity -->
     <string name="game_start">게임 시작</string>
+    <string name="start_level">시작 레벨</string>
 
     <string name="record_preference_key">recordPreferenceKey</string>
     <string name="btn_pause">||</string>
@@ -23,5 +24,9 @@
 
     <string name="max_score_key">maxScoreKey</string>
     <string name="max_combo_key">maxComboKey</string>
+    <string name="max_level_key">maxLevelKey</string>
+
+    <!-- extra keys -->
+    <string name="extra_start_option_key">extraStartOptionKey</string>
 
 </resources>

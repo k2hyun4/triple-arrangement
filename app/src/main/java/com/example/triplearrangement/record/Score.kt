@@ -5,12 +5,14 @@ import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import com.example.triplearrangement.PlayActivity
+import com.example.triplearrangement.option.StartOption
 import kotlin.math.*
 
 class Score(private val view: TextView,
             private val playActivity: PlayActivity) {
-    private val initLevel = 1
-    private val initLevelUpStandardScore = 500
+    private var initLevel = 1
+    private var initLevelUpStandardScore = 500
+    private var initScore = 0
     private var level: Int = initLevel
     private var levelUpStandardScore = initLevelUpStandardScore
 
@@ -46,12 +48,16 @@ class Score(private val view: TextView,
     private fun checkLevelUp(score: Int) {
         if (score > levelUpStandardScore) {
             level += 1
-            levelUpStandardScore = (102.361 * (1.0* level).pow(3.766)).roundToInt() + 3004
+            levelUpStandardScore = getLevelStandardScore(level)
             Toast.makeText(playActivity,
                     String.format("Level[%d]!", level),
                     Toast.LENGTH_LONG)
                 .show()
         }
+    }
+
+    private fun getLevelStandardScore(level: Int): Int {
+        return (102.361 * (1.0* level).pow(3.766)).roundToInt() + 3004
     }
 
     fun plusForTimeBarClick() {
@@ -73,6 +79,14 @@ class Score(private val view: TextView,
     fun resetAll() {
         this.level = initLevel
         this.levelUpStandardScore = initLevelUpStandardScore
-        setScore(0)
+        setScore(initScore)
+    }
+
+    fun setting(startLevel: Int) {
+        initLevel = startLevel
+        initScore = getLevelStandardScore(startLevel)
+        initLevelUpStandardScore = initScore
+
+        resetAll()
     }
 }

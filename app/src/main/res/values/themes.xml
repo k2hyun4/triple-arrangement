@@ -22,4 +22,7 @@
     <style name="Theme.TripleArrangement.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TripleArrangement.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="numberPicker">
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>
