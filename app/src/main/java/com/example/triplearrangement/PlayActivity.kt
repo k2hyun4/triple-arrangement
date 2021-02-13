@@ -24,7 +24,7 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
 
         combo = Combo(this, findViewById(R.id.combo))
-        score = Score(findViewById(R.id.score), combo)
+        score = Score(findViewById(R.id.score), this)
 
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this

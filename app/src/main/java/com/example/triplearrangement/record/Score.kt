@@ -1,10 +1,14 @@
 package com.example.triplearrangement.record
 
+import android.content.Context
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
+import com.example.triplearrangement.PlayActivity
 import kotlin.math.*
 
-class Score(private val view: TextView, private val combo: Combo) {
+class Score(private val view: TextView,
+            private val playActivity: PlayActivity) {
     private val initLevel = 1
     private val initLevelUpStandardScore = 500
     private var level: Int = initLevel
@@ -21,8 +25,16 @@ class Score(private val view: TextView, private val combo: Combo) {
                 .toInt()
     }
 
+    private fun comboBonus(): Int {
+        if (!playActivity.combo.inComboMode()) {
+            return 1
+        }
+
+        return playActivity.combo.getCombo() / 20 + 1
+    }
+
     private fun addScore(addScore: Int) {
-        var buffedAddScore = addScore * level * combo.comboBonus()
+        val buffedAddScore = addScore * level * comboBonus()
         setScore(this.getScore() + buffedAddScore)
     }
 
@@ -34,8 +46,11 @@ class Score(private val view: TextView, private val combo: Combo) {
     private fun checkLevelUp(score: Int) {
         if (score > levelUpStandardScore) {
             level += 1
-            //levelUpStandardScore *= log(level * 2.0, 4.0).roundToInt()
-            levelUpStandardScore = 1_000 * (level * 1.0).pow(2.4).roundToInt() - 1_000
+            levelUpStandardScore = (102.361 * (1.0* level).pow(3.766)).roundToInt() + 3004
+            Toast.makeText(playActivity,
+                    String.format("Level[%d]!", level),
+                    Toast.LENGTH_LONG)
+                .show()
         }
     }
 
