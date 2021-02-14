@@ -4,12 +4,14 @@ import android.content.Context
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.murkgom.triple_arrangement.PlayActivity
 import com.murkgom.triple_arrangement.R
 import com.murkgom.triple_arrangement.enums.LinePosition
 
-class LineController(context: Context,
-                     private val lineWrappers: Array<RelativeLayout>) {
+class LineController(private val context: Context,
+                     private val lineWrappers: Array<RelativeLayout>,
+                    private var comboModeFlag: Boolean) {
     private val lineAdapters = arrayListOf<LineAdapter>()
     private var selectedLine: LinePosition = LinePosition.NONE
     private val playActivity: PlayActivity = context as PlayActivity
@@ -79,15 +81,30 @@ class LineController(context: Context,
 
         val prevLine = lines[selectedLine.index]
         val prevLineLastBlockType = prevLine.last()
-        newLine.add(prevLineLastBlockType)
 
-        combo.addMoveCount()
+        //옮기기 전 체크
+        val willArrangement = newLine.checkWillArrangement(prevLineLastBlockType)
+        val comboWillBreak = combo.checkWillBreak(score.getLevel())
 
-        if (newLine.checkAndRemoveIfAligned()) {
-            score.plusForAlignment()
+        if (comboModeFlag && !willArrangement && comboWillBreak) {
+            Toast.makeText(context, context.getString(R.string.toast_combo_break), Toast.LENGTH_SHORT)
+                    .show()
+            deselectLine(selectedLine.index)
+            return
+        }
+
+        if (willArrangement) {
+            newLine.arrange()
+            score.plusForArrangement()
             combo.addCombo()
         } else {
-            combo.checkMaintain(score.getLevel())
+            newLine.add(prevLineLastBlockType)      //정리되지 않을 경우에만 실질적으로 add
+
+            if (comboWillBreak) {
+                combo.comboBreak()
+            } else {
+                combo.addMoveCount()
+            }
         }
 
         prevLine.removeAt(prevLine.lastIndex)
@@ -138,5 +155,9 @@ class LineController(context: Context,
 
     private fun findLinePosition(targetLineIndex: Int) : LinePosition {
         return LinePosition.values()[targetLineIndex]
+    }
+
+    fun switchComboMode(flag: Boolean) {
+        this.comboModeFlag = flag
     }
 }

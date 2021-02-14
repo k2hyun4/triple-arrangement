@@ -21,9 +21,9 @@ class GameOverDialog(private val context: Context): CustomDialog(context = conte
 
     private fun initPref() {
         sharedPref = context.getSharedPreferences(context.getString(R.string.record_preference_key), Context.MODE_PRIVATE)
-        maxScoreKey = context.getString(R.string.max_score_key)
-        maxComboKey = context.getString(R.string.max_combo_key)
-        maxLevelKey = context.getString(R.string.max_level_key)
+        maxScoreKey = context.getString(R.string.key_max_score)
+        maxComboKey = context.getString(R.string.key_max_combo)
+        maxLevelKey = context.getString(R.string.key_max_level)
 
     }
 

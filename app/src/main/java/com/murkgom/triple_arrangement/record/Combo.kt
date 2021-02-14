@@ -10,15 +10,14 @@ import android.widget.TextView
 import com.murkgom.triple_arrangement.PlayActivity
 import com.murkgom.triple_arrangement.R
 import com.murkgom.triple_arrangement.enums.BlockType
-import org.w3c.dom.Text
 
 class Combo(context: Context,
             private val view: TextView) {
     private val playActivity: PlayActivity = context as PlayActivity
     private var maxCombo: Int = 0
     private val allowedSurMove = 0
-    private val comboModeStandardCount = 10
-    private var comboModeFlag = false
+    private val burningStandardCount = 10
+    private var burningFlag = false
 
     private val initMaxMoveCountInCombo = BlockType.values().last().level + allowedSurMove + 2
     private var combo = 0
@@ -26,8 +25,8 @@ class Combo(context: Context,
     private var moveCountInCombo = 0
 
     private val linesWrapper: LinearLayout = playActivity.findViewById(R.id.wrapper_lines)
-    private val comboModeImgLeft: ImageView = playActivity.findViewById(R.id.img_combo_mode_left)
-    private val comboModeImgRight: ImageView = playActivity.findViewById(R.id.img_combo_mode_right)
+    private val burningImgLeft: ImageView = playActivity.findViewById(R.id.img_burning_left)
+    private val burningImgRight: ImageView = playActivity.findViewById(R.id.img_burning_right)
     private val timeBar: RelativeLayout = playActivity.findViewById(R.id.time_bar)
     private val moveCountInComboView: TextView = playActivity.findViewById(R.id.move_count_in_combo)
 
@@ -44,48 +43,50 @@ class Combo(context: Context,
         return this.maxCombo
     }
 
-    fun checkMaintain(level: Int) {
-        if (this.moveCount > level + allowedSurMove) {
-            checkMaxCombo()
-            resetCombo()
-        }
+    fun checkWillBreak(level: Int): Boolean {
+        return this.moveCount + 1 > level + allowedSurMove
     }
 
-    fun inComboMode(): Boolean {
-        return this.comboModeFlag
+    fun comboBreak() {
+        checkMaxCombo()
+        resetCombo()
     }
 
-    private fun startComboMode() {
-        if (comboModeFlag || combo < comboModeStandardCount) {
+    fun burning(): Boolean {
+        return this.burningFlag
+    }
+
+    private fun startBurning() {
+        if (burningFlag || combo < burningStandardCount) {
             return
         }
 
-        comboModeFlag = true
-        comboModeEffect()
+        burningFlag = true
+        burningEffect()
     }
 
-    private fun stopComboMode() {
-        comboModeFlag = false
+    private fun stopBurning() {
+        burningFlag = false
         defaultEffect()
     }
 
     private fun defaultEffect() {
         linesWrapper.background = playActivity.getDrawable(R.color.black)
-        comboModeImgLeft.visibility = View.INVISIBLE
-        comboModeImgRight.visibility = View.INVISIBLE
+        burningImgLeft.visibility = View.INVISIBLE
+        burningImgRight.visibility = View.INVISIBLE
         timeBar.background = playActivity.getDrawable(R.color.purple_700)
     }
 
-    private fun comboModeEffect() {
-        linesWrapper.background = playActivity.getDrawable(R.drawable.background_combo_mode)
-        comboModeImgLeft.visibility = View.VISIBLE
-        comboModeImgRight.visibility = View.VISIBLE
+    private fun burningEffect() {
+        linesWrapper.background = playActivity.getDrawable(R.drawable.background_burning)
+        burningImgLeft.visibility = View.VISIBLE
+        burningImgRight.visibility = View.VISIBLE
         timeBar.background = playActivity.getDrawable(R.color.red)
     }
 
     fun addCombo() {
         setCombo(combo + 1)
-        startComboMode()
+        startBurning()
         resetMoveCountInCombo()
     }
 
@@ -98,7 +99,7 @@ class Combo(context: Context,
     private fun resetCombo() {
         setCombo(0)
         resetMoveCountInCombo()
-        stopComboMode()
+        stopBurning()
     }
 
     private fun checkMaxCombo() {

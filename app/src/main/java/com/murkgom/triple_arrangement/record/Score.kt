@@ -3,6 +3,7 @@ package com.murkgom.triple_arrangement.record
 import android.widget.TextView
 import android.widget.Toast
 import com.murkgom.triple_arrangement.PlayActivity
+import com.murkgom.triple_arrangement.R
 import com.murkgom.triple_arrangement.enums.BlockType
 import kotlin.math.*
 
@@ -26,7 +27,7 @@ class Score(private val view: TextView,
     }
 
     private fun comboBonus(): Int {
-        if (!playActivity.combo.inComboMode()) {
+        if (!playActivity.combo.burning()) {
             return 1
         }
 
@@ -60,7 +61,7 @@ class Score(private val view: TextView,
                     .addMoveCountInCombo()
             levelUpStandardScore = getLevelStandardScore(level)
             Toast.makeText(playActivity,
-                    String.format("레벨%d!", level),
+                    String.format(playActivity.getString(R.string.toast_level_up, level)),
                     Toast.LENGTH_LONG)
                 .show()
         }
@@ -82,7 +83,7 @@ class Score(private val view: TextView,
         this.addScore(moveBlockBonus)
     }
 
-    fun plusForAlignment() {
+    fun plusForArrangement() {
         this.addScore(alignmentBonus)
     }
 
