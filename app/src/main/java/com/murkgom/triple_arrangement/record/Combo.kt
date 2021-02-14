@@ -1,37 +1,41 @@
 package com.murkgom.triple_arrangement.record
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.murkgom.triple_arrangement.PlayActivity
 import com.murkgom.triple_arrangement.R
+import com.murkgom.triple_arrangement.enums.BlockType
 
 class Combo(context: Context,
             private val view: TextView) {
     private val playActivity: PlayActivity = context as PlayActivity
     private var maxCombo: Int = 0
-    private var moveCount = 0
     private val allowedSurMove = 0
-    private val comboModeStandardCount = 10
-    private var comboModeFlag = false
-    private val linesWrapper: LinearLayout
-    private val comboModeImgLeft: ImageView
-    private val comboModeImgRight: ImageView
-    private val timeBar: LinearLayout
+    private val burningStandardCount = 10
+    private var burningFlag = false
+
+    private val initMaxMoveCountInCombo = BlockType.values().last().level + allowedSurMove + 2
+    private var combo = 0
+    private var moveCount = 0
+    private var moveCountInCombo = 0
+
+    private val linesWrapper: LinearLayout = playActivity.findViewById(R.id.wrapper_lines)
+    private val burningImgLeft: ImageView = playActivity.findViewById(R.id.img_burning_left)
+    private val burningImgRight: ImageView = playActivity.findViewById(R.id.img_burning_right)
+    private val timeBar: RelativeLayout = playActivity.findViewById(R.id.time_bar)
+    private val moveCountInComboView: TextView = playActivity.findViewById(R.id.move_count_in_combo)
 
     init {
-        linesWrapper = playActivity.findViewById(R.id.wrapper_lines)
-        comboModeImgLeft = playActivity.findViewById(R.id.img_combo_mode_left)
-        comboModeImgRight = playActivity.findViewById(R.id.img_combo_mode_right)
-        timeBar = playActivity.findViewById(R.id.time_bar)
+        resetMoveCountInCombo()
     }
 
     fun getCombo(): Int {
-        return this.view.text
-                .toString()
-                .toInt()
+        return this.combo
     }
 
     fun getMaxCombo(): Int {
@@ -39,59 +43,67 @@ class Combo(context: Context,
         return this.maxCombo
     }
 
-    fun checkMaintain(level: Int) {
-        if (this.moveCount > level + allowedSurMove) {
-            checkMaxCombo()
-            setCombo(0)
-            stopComboMode()
-        }
+    fun checkWillBreak(level: Int): Boolean {
+        return this.moveCount + 1 > level + allowedSurMove
     }
 
-    fun inComboMode(): Boolean {
-        return this.comboModeFlag
+    fun comboBreak() {
+        checkMaxCombo()
+        resetCombo()
     }
 
-    private fun startComboMode() {
-        if (comboModeFlag
-            || this.getCombo() < comboModeStandardCount) {
+    fun burning(): Boolean {
+        return this.burningFlag
+    }
+
+    private fun startBurning() {
+        if (burningFlag || combo < burningStandardCount) {
             return
         }
 
-        comboModeFlag = true
-        comboModeEffect()
+        burningFlag = true
+        burningEffect()
     }
 
-    private fun stopComboMode() {
-        comboModeFlag = false
+    private fun stopBurning() {
+        burningFlag = false
         defaultEffect()
     }
 
     private fun defaultEffect() {
         linesWrapper.background = playActivity.getDrawable(R.color.black)
-        comboModeImgLeft.visibility = View.INVISIBLE
-        comboModeImgRight.visibility = View.INVISIBLE
+        burningImgLeft.visibility = View.INVISIBLE
+        burningImgRight.visibility = View.INVISIBLE
         timeBar.background = playActivity.getDrawable(R.color.purple_700)
     }
 
-    private fun comboModeEffect() {
-        linesWrapper.background = playActivity.getDrawable(R.drawable.background_combo_mode)
-        comboModeImgLeft.visibility = View.VISIBLE
-        comboModeImgRight.visibility = View.VISIBLE
+    private fun burningEffect() {
+        linesWrapper.background = playActivity.getDrawable(R.drawable.background_burning)
+        burningImgLeft.visibility = View.VISIBLE
+        burningImgRight.visibility = View.VISIBLE
         timeBar.background = playActivity.getDrawable(R.color.red)
     }
 
     fun addCombo() {
-        setCombo(getCombo() + 1)
-        startComboMode()
+        setCombo(combo + 1)
+        startBurning()
+        resetMoveCountInCombo()
     }
 
     private fun setCombo(combo: Int) {
-        this.view.text = (combo).toString()
+        this.combo = combo
+        this.view.text = combo.toString()
         resetMoveCount()
     }
 
+    private fun resetCombo() {
+        setCombo(0)
+        resetMoveCountInCombo()
+        stopBurning()
+    }
+
     private fun checkMaxCombo() {
-        val nowCombo = getCombo()
+        val nowCombo = combo
         maxCombo = if (nowCombo > maxCombo) {
             nowCombo
         } else {
@@ -101,15 +113,42 @@ class Combo(context: Context,
 
     fun addMoveCount() {
         this.moveCount += 1
+        minusMoveCountInCombo()
     }
 
     fun resetMoveCount() {
         this.moveCount = 0
+        resetMoveCountInCombo()
     }
 
     fun resetAll() {
+        resetMoveCount()
         this.maxCombo = 0
-        setCombo(0)
-        stopComboMode()
+        resetCombo()
+    }
+
+    private fun setMoveCountInCombo(moveCount: Int) {
+        moveCountInCombo = moveCount
+        moveCountInComboView.text = playActivity.getString(R.string.move_count_in_combo, moveCount)
+        moveCountInComboView.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                (initMaxMoveCountInCombo - moveCount / 1.5f) * 3f)
+    }
+
+    fun addMoveCountInCombo() {
+        //level up
+        this.setMoveCountInCombo(moveCountInCombo + 1)
+    }
+
+    private fun minusMoveCountInCombo() {
+        //일반적인 move
+        this.setMoveCountInCombo(moveCountInCombo - 1)
+    }
+
+    private fun resetMoveCountInCombo() {
+        //case1: timeBar
+        //case2: combo break
+        //case3: combo add
+        this.setMoveCountInCombo(playActivity.score
+                .getLevel() + allowedSurMove + 1)
     }
 }

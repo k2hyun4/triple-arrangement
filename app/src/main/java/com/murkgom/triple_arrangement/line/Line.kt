@@ -8,23 +8,24 @@ class Line(): ArrayList<BlockType>() {
     /**
      * 블럭 이동시 발생
      */
-    fun checkAndRemoveIfAligned(): Boolean {
-        var alignmentFlag = false
 
-        if (this.size > removeSize - 1
-                && checkRemoveTarget(this.drop(this.size - removeSize))) {
-            this.removeRange(this.size - removeSize, this.size)
-            alignmentFlag = true
+    fun checkWillArrangement(newBlock: BlockType): Boolean {
+        if (this.size < removeSize - 1) {
+            return false
         }
 
-        return alignmentFlag
+        val lastBlock = this.last()
+
+        if (lastBlock != newBlock) {
+            return false
+        }
+
+        return lastBlock == this[this.lastIndex - 1]
     }
 
-    private fun checkRemoveTarget(targetBlocks: List<BlockType>): Boolean {
-        return targetBlocks[0] == targetBlocks[1]
-                && targetBlocks[1] == targetBlocks[2];
+    fun arrange() {
+        this.removeRange(this.size - removeSize + 1, this.size)
     }
-
     /**
      * 타임바 클릭시 발생, index : 0
      */
