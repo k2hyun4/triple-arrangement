@@ -26,7 +26,7 @@ class Score(private val view: TextView,
     }
 
     private fun comboBonus(): Int {
-        if (!playActivity.combo.inComboMode()) {
+        if (!playActivity.combo.burning()) {
             return 1
         }
 
@@ -57,7 +57,7 @@ class Score(private val view: TextView,
         if (score > levelUpStandardScore) {
             level += 1
             playActivity.combo
-                    .addMoveCountInCombo()
+                    .addMoveCountInBurning()
             levelUpStandardScore = getLevelStandardScore(level)
             Toast.makeText(playActivity,
                     String.format("레벨%d!", level),

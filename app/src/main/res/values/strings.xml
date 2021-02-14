@@ -10,7 +10,7 @@
     <string name="score">Score</string>
     <string name="zero_value">0</string>
     <string name="combo">Combo</string>
-    <string name="move_count_in_combo">콤보 유지 : %1$d</string>
+    <string name="move_count_in_burning">버닝 유지 : %1$d</string>
 
     <!-- game over dialog -->
     <string name="max_score">최고 점수</string>
