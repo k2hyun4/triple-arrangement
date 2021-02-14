@@ -25,9 +25,11 @@
     <string name="go_to_main">메인으로</string>
     <string name="restart">다시 시작</string>
 
-    <string name="max_score_key">maxScoreKey</string>
-    <string name="max_combo_key">maxComboKey</string>
-    <string name="max_level_key">maxLevelKey</string>
+    <string name="key_max_score">maxScoreKey</string>
+    <string name="key_max_combo">maxComboKey</string>
+    <string name="key_max_level">maxLevelKey</string>
+    <string name="key_my_option_start_level">myOptionStartLevelKey</string>
+    <string name="key_my_option_combo_mode_flag">myOptionComboModeFlagKey</string>
 
     <!-- extra keys -->
     <string name="extra_start_option_key">extraStartOptionKey</string>
