@@ -24,13 +24,13 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
 
-        combo = Combo(this, findViewById(R.id.combo))
         score = Score(findViewById(R.id.score), this)
         val startOption = intent.getParcelableExtra<StartOption>(this.getString(R.string.extra_start_option_key))
 
         if (startOption != null) {
             score.setting(startOption.getLevel())
         }
+        combo = Combo(this, findViewById(R.id.combo))
 
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this
@@ -63,7 +63,7 @@ class PlayActivity : AppCompatActivity() {
     }
 
     private fun setOnClickTimeBar() {
-        findViewById<LinearLayout>(R.id.time_bar)
+        findViewById<RelativeLayout>(R.id.time_bar)
                 .setOnClickListener {
                     if (lineController.checkLinesAddableBlock()) {
                         lineController.addNewRow()
