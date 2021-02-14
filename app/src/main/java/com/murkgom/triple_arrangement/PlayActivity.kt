@@ -29,20 +29,21 @@ class PlayActivity : AppCompatActivity() {
         score.setting(startOption!!.getLevel())
         combo = Combo(this, findViewById(R.id.combo))
 
+        val startOptionComboModeFlag = startOption.getComboModeFlag()
         val rootLayout = findViewById<LinearLayout>(R.id.root)
         val context = this
         rootLayout.viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     initAddNewRowTimer()
-                    initDialogs()
+                    initDialogs(startOptionComboModeFlag)
                     lineController = LineController(context,
                         arrayOf(
                             findViewById(R.id.wrapper_line_left),
                             findViewById(R.id.wrapper_line_middle),
                             findViewById(R.id.wrapper_line_right)
                         ),
-                        startOption.getComboModeFlag()
+                            startOptionComboModeFlag
                     )
 
                     setOnClickTimeBar()
@@ -52,8 +53,8 @@ class PlayActivity : AppCompatActivity() {
         )
     }
 
-    private fun initDialogs() {
-        menuDialog = MenuDialog(this)
+    private fun initDialogs(startOptionComboModeFlag: Boolean) {
+        menuDialog = MenuDialog(this, startOptionComboModeFlag)
         findViewById<Button>(R.id.menu)
                 .setOnClickListener {menuDialog.show()}
 

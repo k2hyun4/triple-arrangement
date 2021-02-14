@@ -156,4 +156,8 @@ class LineController(private val context: Context,
     private fun findLinePosition(targetLineIndex: Int) : LinePosition {
         return LinePosition.values()[targetLineIndex]
     }
+
+    fun switchComboMode(flag: Boolean) {
+        this.comboModeFlag = flag
+    }
 }
