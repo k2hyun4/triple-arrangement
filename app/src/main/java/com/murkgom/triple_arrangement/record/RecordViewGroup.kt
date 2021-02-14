@@ -5,14 +5,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.murkgom.triple_arrangement.R
 
-class RecordViewGroup {
-    lateinit var recordView: TextView
-    lateinit var newSign: TextView
-
-    constructor(layout: LinearLayout) {
-        recordView = layout.findViewById(R.id.record)
-        newSign = layout.findViewById(R.id.new_sign)
-    }
+class RecordViewGroup(layout: LinearLayout) {
+    private val recordView: TextView = layout.findViewById(R.id.record)
+    private val newSign: TextView = layout.findViewById(R.id.new_sign)
 
     fun setRecord(record: Int) {
         recordView.text = "%,d".format(record)

@@ -11,7 +11,7 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="100dp"
             >
@@ -29,7 +29,29 @@
                 android:descendantFocusability="blocksDescendants"
                 />
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/combo_mode"
+                android:gravity="center_vertical"
+                android:textSize="30sp"/>
+            <Switch
+                android:id="@+id/switch_combo_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="50dp"
+                android:scaleX="2"
+                android:scaleY="2"
+                />
+        </LinearLayout>
     </LinearLayout>
     <Button
         android:id="@+id/game_start"

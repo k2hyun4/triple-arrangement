@@ -26,10 +26,7 @@ class PlayActivity : AppCompatActivity() {
 
         score = Score(findViewById(R.id.score), this)
         val startOption = intent.getParcelableExtra<StartOption>(this.getString(R.string.extra_start_option_key))
-
-        if (startOption != null) {
-            score.setting(startOption.getLevel())
-        }
+        score.setting(startOption!!.getLevel())
         combo = Combo(this, findViewById(R.id.combo))
 
         val rootLayout = findViewById<LinearLayout>(R.id.root)
@@ -44,7 +41,8 @@ class PlayActivity : AppCompatActivity() {
                             findViewById(R.id.wrapper_line_left),
                             findViewById(R.id.wrapper_line_middle),
                             findViewById(R.id.wrapper_line_right)
-                        )
+                        ),
+                        startOption.getComboModeFlag()
                     )
 
                     setOnClickTimeBar()

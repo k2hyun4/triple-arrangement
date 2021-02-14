@@ -4,13 +4,15 @@
     <!-- main activity -->
     <string name="game_start">게임 시작</string>
     <string name="start_level">시작 레벨</string>
+    <string name="combo_mode">콤보 모드</string>
+    <string name="start_level_picker_label">레벨%1$d (블럭 종류 : %2$d개)</string>
 
     <string name="record_preference_key">recordPreferenceKey</string>
     <string name="btn_pause">||</string>
     <string name="score">Score</string>
     <string name="zero_value">0</string>
     <string name="combo">Combo</string>
-    <string name="move_count_in_burning">버닝 유지 : %1$d</string>
+    <string name="move_count_in_combo">콤보 유지 : %1$d</string>
 
     <!-- game over dialog -->
     <string name="max_score">최고 점수</string>
@@ -29,5 +31,9 @@
 
     <!-- extra keys -->
     <string name="extra_start_option_key">extraStartOptionKey</string>
+
+    <!-- toast -->
+    <string name="toast_level_up">레벨%1$d!</string>
+    <string name="toast_combo_break">콤보가 깨져요ㅠㅠ(콤보 모드 적용중)</string>
 
 </resources>

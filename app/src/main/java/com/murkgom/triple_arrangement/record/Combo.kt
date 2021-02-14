@@ -19,7 +19,7 @@ class Combo(context: Context,
     private val burningStandardCount = 10
     private var burningFlag = false
 
-    private val initMaxMoveCountInBurning = BlockType.values().last().level + allowedSurMove + 2
+    private val initMaxMoveCountInCombo = BlockType.values().last().level + allowedSurMove + 2
     private var combo = 0
     private var moveCount = 0
     private var moveCountInCombo = 0
@@ -28,10 +28,10 @@ class Combo(context: Context,
     private val burningImgLeft: ImageView = playActivity.findViewById(R.id.img_burning_left)
     private val burningImgRight: ImageView = playActivity.findViewById(R.id.img_burning_right)
     private val timeBar: RelativeLayout = playActivity.findViewById(R.id.time_bar)
-    private val moveCountInBurningView: TextView = playActivity.findViewById(R.id.move_count_in_burning)
+    private val moveCountInComboView: TextView = playActivity.findViewById(R.id.move_count_in_combo)
 
     init {
-        resetMoveCountInBurning()
+        resetMoveCountInCombo()
     }
 
     fun getCombo(): Int {
@@ -43,11 +43,13 @@ class Combo(context: Context,
         return this.maxCombo
     }
 
-    fun checkMaintain(level: Int) {
-        if (this.moveCount > level + allowedSurMove) {
-            checkMaxCombo()
-            resetCombo()
-        }
+    fun checkWillBreak(level: Int): Boolean {
+        return this.moveCount + 1 > level + allowedSurMove
+    }
+
+    fun comboBreak() {
+        checkMaxCombo()
+        resetCombo()
     }
 
     fun burning(): Boolean {
@@ -85,7 +87,7 @@ class Combo(context: Context,
     fun addCombo() {
         setCombo(combo + 1)
         startBurning()
-        resetMoveCountInBurning()
+        resetMoveCountInCombo()
     }
 
     private fun setCombo(combo: Int) {
@@ -96,7 +98,7 @@ class Combo(context: Context,
 
     private fun resetCombo() {
         setCombo(0)
-        resetMoveCountInBurning()
+        resetMoveCountInCombo()
         stopBurning()
     }
 
@@ -111,12 +113,12 @@ class Combo(context: Context,
 
     fun addMoveCount() {
         this.moveCount += 1
-        minusMoveCountInBurning()
+        minusMoveCountInCombo()
     }
 
     fun resetMoveCount() {
         this.moveCount = 0
-        resetMoveCountInBurning()
+        resetMoveCountInCombo()
     }
 
     fun resetAll() {
@@ -125,28 +127,28 @@ class Combo(context: Context,
         resetCombo()
     }
 
-    private fun setMoveCountInBurning(moveCount: Int) {
+    private fun setMoveCountInCombo(moveCount: Int) {
         moveCountInCombo = moveCount
-        moveCountInBurningView.text = playActivity.getString(R.string.move_count_in_burning, moveCount)
-        moveCountInBurningView.setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                (initMaxMoveCountInBurning - moveCount / 1.5f) * 3f)
+        moveCountInComboView.text = playActivity.getString(R.string.move_count_in_combo, moveCount)
+        moveCountInComboView.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                (initMaxMoveCountInCombo - moveCount / 1.5f) * 3f)
     }
 
-    fun addMoveCountInBurning() {
+    fun addMoveCountInCombo() {
         //level up
-        this.setMoveCountInBurning(moveCountInCombo + 1)
+        this.setMoveCountInCombo(moveCountInCombo + 1)
     }
 
-    private fun minusMoveCountInBurning() {
+    private fun minusMoveCountInCombo() {
         //일반적인 move
-        this.setMoveCountInBurning(moveCountInCombo - 1)
+        this.setMoveCountInCombo(moveCountInCombo - 1)
     }
 
-    private fun resetMoveCountInBurning() {
+    private fun resetMoveCountInCombo() {
         //case1: timeBar
         //case2: combo break
         //case3: combo add
-        this.setMoveCountInBurning(playActivity.score
+        this.setMoveCountInCombo(playActivity.score
                 .getLevel() + allowedSurMove + 1)
     }
 }
